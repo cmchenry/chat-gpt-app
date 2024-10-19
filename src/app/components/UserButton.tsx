@@ -30,7 +30,7 @@ export default function UserButton({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Avatar>
-              <AvatarImage src={session?.user?.image!} />
+              <AvatarImage src={session?.user?.image || "/default-avatar.png"} />
               <AvatarFallback>
                 {getFirstTwoCapitalLetters(session?.user?.name)}
               </AvatarFallback>
