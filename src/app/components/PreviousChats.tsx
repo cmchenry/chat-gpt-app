@@ -9,7 +9,11 @@ import Transcript from "./Transcript";
 
 export default async function PreviousChats() {
   const session = await getServerSession();
-  const chats = await getChatsWithMessages(session?.user?.email!);
+  if (!session || !session.user || !session.user.email) {
+    return null;
+  }
+
+  const chats = await getChatsWithMessages(session.user.email);
 
   return (
     <div>

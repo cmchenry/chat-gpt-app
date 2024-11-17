@@ -31,11 +31,14 @@ export async function getCompletion(
   ];
 
   const session = await auth();
+  if (!session?.user?.email) {
+    throw new Error("No email found in session");
+  }
 
   let chatId = id;
   if (!chatId) {
     chatId = await createChat(
-      session?.user?.email!,
+      session.user.email,
       messageHistory[0].content,
       messages
     );
