@@ -1,5 +1,9 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+
+import Transcript from "./Transcript";
+import { Message } from "@/types";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -10,41 +14,38 @@ interface Message {
   content: string;
 }
 
-export default function Chat() {
-  const [messages, setMessages] = useState<Message[]>([]);
+export default function Chat({
+  id = null,
+  messages: initialMessages = [],
+}: {
+  id?: number | null;
+  messages?: Message[];
+}) {
+  const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [message, setMessage] = useState("");
+  const chatId = useRef<number | null>(id);
+  const router = useRouter();
 
   const onClick = async () => {
-    const completions = await getCompletion([
+    const completions = await getCompletion(chatId.current, [
       ...messages,
       {
         role: "user",
         content: message,
       },
     ]);
+    if (!chatId.current) {
+      router.push(`/chats/${completions.id}`);
+      router.refresh();
+    }
+    chatId.current = completions.id;
     setMessage("");
     setMessages(completions.messages);
   };
 
   return (
     <div className="flex flex-col">
-      {messages.map((message, i) => (
-        <div
-          key={i}
-          className={`mb-5 flex flex-col ${
-            message.role === "user" ? "items-end" : "items-start"
-          }`}
-        >
-          <div
-            className={`${
-              message.role === "user" ? "bg-blue-500" : "bg-gray-500 text-black"
-            } rounded-md py-2 px-8`}
-          >
-            {message.content}
-          </div>
-        </div>
-      ))}
-
+      <Transcript messages={messages} truncate={false} />
       <div className="flex border-t-2 border-t-gray-500 pt-3 mt-3">
         <Input
           className="flex-grow text-xl"

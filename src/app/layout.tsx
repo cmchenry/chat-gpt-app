@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Link from "next/link";
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider} from "next-auth/react";
 
 import { signIn, signOut, auth } from "@/auth";
 
