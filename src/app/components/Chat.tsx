@@ -3,16 +3,11 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import Transcript from "./Transcript";
-import { Message } from "@/types";
+import type { Message } from "@/types";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { getCompletion } from "@/server-actions/getCompletions";
-
-interface Message {
-  role: "user" | "assistant";
-  content: string;
-}
 
 export default function Chat({
   id = null,
